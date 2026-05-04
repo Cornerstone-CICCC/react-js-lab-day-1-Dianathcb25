@@ -1,88 +1,73 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/WHFdh0zz)
-# React.js - Lab Day
+# React + TypeScript + Vite
 
-**Goal:** Build a small CRUD app using React props, states, and forms.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 📋 Instructions
+Currently, two official plugins are available:
 
-1. Create a new React project by running `npm create vite@latest react-lab`. This will create a new directory. Run `cd react-lab` to go into the directory and then run `npm install` to install the dependencies.
-2. Run `npm run dev` to start your React app.
-3. Create three components inside the `src/components` directory:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-    - `UserForm.tsx`
-    - `UserList.tsx`
-    - `UserProfile.tsx`
+## React Compiler
 
-4. Here are the details for each component:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-    **UserForm**
-    - One controlled form with 6 fields and 2 buttons:
-        - `fullname` (text)
-        - `age` (number)
-        - `education` (select) - *Grade school, high school, college*
-        - `gender` (radio) - *Male, Female, other*
-        - `skills` (checkbox) - *TypeScript, React, Node, NoSQL*
-        - `bio` (textarea)
-        ---
-        - `Add/Save User` (button) - Adds or updates a user.
-        - `Clear` (button) - Resets the form.
-    - The form will be used for both adding and editing a user.
+## Expanding the ESLint configuration
 
-    **UserList**
-    - List down all the users in an html table.
-    - Each row should only show the user's `fullname` and `id`.
-    - At the end of each row are the **View**, **Edit**, and **Delete** buttons.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-    **UserProfile**
-    - Shows all the selected user's data when the **View** button is clicked on `UserList` component. For the skills array, you can just separate each element with a comma.
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-5. Import all the components into the `App.tsx`. Your `App` component should hold all the states and handler functions needed by all 3 components.
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-    ```tsx
-    import UserForm from './components/UserForm';
-    import UserList from './components/UserList';
-    import UserProfile from './components/UserProfile';
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-    const App = () => {
-      /* Your states here */
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-      /* Your handlers here */
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-      return (
-        <>
-          <UserForm />
-          <UserList />
-          <UserProfile />
-        </>
-      )
-    }
-    ```
-
-6. Pass the data and handlers from the `App` component to the necessary components.
-7. For the states, make sure you have a `formData` state which is an object that holds all the form field data and a `users` state which holds the list of users. Create other needed states.
-
-    **Example:**
-
-    ```tsx
-    const [users, setUsers] = useState<User[]>([])
-    const [formData, setFormData] = useState<Omit(User, 'id')>({
-      fullname: "",
-      age: 0,
-      education: "",
-      gender: "",
-      skills: [],
-      bio: ""
-    })
-    ```
-
-8. For the button functionality:
-
-    - `View` - Shows the user data on the `UserProfile` component.
-    - `Edit` - Updates the `UserForm` component and fills in the fields with the selected user's data.
-    - `Delete` - Deletes the user.
-
-9. Commit and push your changes once you are done.
-
-## 📖 References
-
-- [https://github.com/elmerdotdev/ciccc-react-review-code-along/]
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
